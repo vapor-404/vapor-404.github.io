@@ -1,0 +1,124 @@
+html, body {
+    background-color: rgb(15, 15, 15);
+    font-family: "Roboto Mono", monospace;
+}
+
+button {
+    outline: none;
+    border: 1px solid lightgray;
+    background: none;
+    color: lightgray;
+    border-radius: 100%;
+    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+    transition: .1s ease;
+}
+
+button:hover {
+    border-color: white;
+    color: white;
+    border-style: double;
+    border-width: 4px;
+}
+button:active {
+    border-width: 6px;
+}
+.play {
+    width: 5em;
+    height: 5em;
+    font-size: 14pt;
+}
+
+.skip {
+    width: 4em;
+    height: 4em;
+    font-size: 14pt;
+}
+
+#next:hover {
+    border-style: double solid double double;
+}
+
+#prev:hover {
+    border-style: double double double solid;
+}
+
+.play:hover {
+    border-style: double solid;
+}
+
+#center-container {
+    position: relative;
+    height: 90%;
+}
+
+#main {
+    width: 25em;
+    text-align: center;
+    border: 1px double white;
+    padding: 1em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 2%);
+}
+
+#tracklist {
+    margin-top: .5em;
+    color: lightgray;
+    transition: .1s ease;
+    -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+   -khtml-user-select: none; /* Konqueror HTML */
+     -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+          user-select: none; /* Non-prefixed version, currently
+                                supported by Chrome and Opera */
+    height: 30vh;
+    overflow-y: scroll;
+}
+
+p {
+    -webkit-margin-before: 0px;
+    -webkit-margin-after: 0px;
+    margin-bottom: .5em;
+    transition: .1s ease;
+    display: inline-block;
+    cursor: pointer;
+}
+
+p:hover {
+    color: white;
+}
+
+#albumart {
+    width: 100%;
+    margin-bottom: .4em;
+}
+
+#trackbar {
+	background-color: white;
+	margin: 0 auto;
+	height: 2px;
+	width: 0px;
+}
+
+#trackbar-container {
+	margin: 0 auto;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	width: 100%;
+}
+
+#songinfo {
+    color: lightgray;
+    height: 3em;
+    overflow: hidden;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 1px solid lightgray
+}

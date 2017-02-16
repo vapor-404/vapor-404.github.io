@@ -34,6 +34,20 @@ $('body').keyup(function(e){
        // user has pressed space
        e.preventDefault();
        pause();
+   } else if (e.keyCode == 39) {
+       //right arrow
+        e.preventDefault();
+        next()
+   } else if (e.keyCode == 37) {
+       e.preventDefault();
+       prev();
+   }
+});
+
+$('body').keydown(function(e){
+   if(e.keyCode == 32){
+       // doh ho ho
+       e.preventDefault();
    }
 });
 

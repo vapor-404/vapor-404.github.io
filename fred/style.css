@@ -111,16 +111,15 @@ p:hover {
 
 #trackbar {
 	background-color: white;
-	margin: 0 auto;
 	height: 2px;
 	width: 0px;
 }
 
 #trackbar-container {
-	margin: 0 auto;
-	margin-top: 20px;
-	margin-bottom: 20px;
+	padding-top: 20px;
+	padding-bottom: 20px;
 	width: 100%;
+    cursor: pointer;
 }
 
 #songinfo {

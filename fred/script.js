@@ -52,6 +52,11 @@ $('body').keydown(function(e){
    }
 });
 
+function seek(e) {
+    var percent = e.offsetX / this.offsetWidth;
+    currentSong.currentTime = percent * currentSong.duration;
+}
+
 function pause() {
     if (firstClick === true) {
         play(songs[0]);
@@ -112,6 +117,8 @@ $(document).ready(function() {
     )
     play(songs[0]);
     pause();
+
+    document.getElementById("trackbar-container").addEventListener("click", seek);
 })
 
 function setAlbumArt(path) {

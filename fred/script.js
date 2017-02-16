@@ -4,6 +4,7 @@ var trackDuration;
 var firstClick = true;
 var track = 0;
 
+
 function play(song) {
     currentSong.pause();
     currentSong.currentTime = 0;
@@ -14,11 +15,10 @@ function play(song) {
     trackDuration = currentSong.duration;
     setAlbumArt(song.artPath);
     track = songs.indexOf(song)
-    console.log(track)
 
     $("#songinfo").html(
         song.name +
-        " - <a target='_blank' href='" + song.link + "'>" +
+        "<br> <a target='_blank' href='" + song.link + "'>" +
         song.artist + "</a>"
     )
 
@@ -27,6 +27,7 @@ function play(song) {
     currentSong.onended = function() {
         next();
     }
+    $("#play").removeClass("paused")
 }
 
 $('body').keyup(function(e){
@@ -58,25 +59,36 @@ function pause() {
     } else if (playing) {
         currentSong.pause();
         playing = false;
+        $("#play").addClass("paused")
     } else {
         currentSong.play();
         playing = true;
+        $("#play").removeClass("paused")
     }
 }
 
 function next() {
     //loop if at the end
+    var toPlay;
+    var wasPlaying = playing;
     if (track != songs.length-1) {
-        play(songs[track + 1]);
-    } else { play(songs[0]); }
+        toPlay = songs[track + 1];
+    } else { toPlay = songs[0]; }
+    play(toPlay);
+    if (!wasPlaying) pause();
 }
 
 function prev() {
+    var toPlay;
+    var wasPlaying = playing;
     if (currentSong.currentTime > 3) { //rewinds if in the middle of a song
         currentSong.currentTime = 0;
+        return;
     } else if (track === 0) {
-            play(songs[songs.length-1]);
-    } else { play(songs[track - 1]); }
+            toPlay = (songs[songs.length-1]);
+    } else { toPlay = (songs[track - 1]); }
+    play(toPlay);
+    if (!wasPlaying) pause();
 }
 
 function updateTrackbar() {
@@ -98,6 +110,8 @@ $(document).ready(function() {
     $("#tracklist").append(
         "<p><a href='songs.zip' target='_blank'> download all</a></p>"
     )
+    play(songs[0]);
+    pause();
 })
 
 function setAlbumArt(path) {

@@ -20,11 +20,13 @@ button:hover {
     color: white;
     border-style: double;
     border-width: 4px;
+
 }
 button:active {
     border-width: 6px;
 }
 .play {
+    transition: transform .3s ease;
     width: 5em;
     height: 5em;
     font-size: 14pt;
@@ -34,6 +36,15 @@ button:active {
     width: 4em;
     height: 4em;
     font-size: 14pt;
+    transition: transform .2s ease;
+}
+
+#next:active {
+    transform: rotate(360deg);
+}
+
+#prev:active {
+    transform: rotate(-360deg);
 }
 
 #next:hover {
@@ -46,6 +57,7 @@ button:active {
 
 .play:hover {
     border-style: double solid;
+    transform: rotate(180deg);
 }
 
 #center-container {
@@ -54,7 +66,7 @@ button:active {
 }
 
 #main {
-    width: 25em;
+    width: 30em;
     text-align: center;
     border: 1px double white;
     padding: 1em;
@@ -75,7 +87,7 @@ button:active {
       -ms-user-select: none; /* Internet Explorer/Edge */
           user-select: none; /* Non-prefixed version, currently
                                 supported by Chrome and Opera */
-    height: 30vh;
+    height: 20vh;
     overflow-y: scroll;
 }
 
@@ -121,4 +133,11 @@ a {
     text-decoration: none;
     color: inherit;
     border-bottom: 1px solid lightgray
+}
+
+
+.paused {
+    border-style: double solid !important;
+    border-width: 4px;
+    transform: rotate(180deg) !important;
 }

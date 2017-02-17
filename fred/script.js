@@ -1,6 +1,5 @@
 var currentSong;
 var playing;
-var trackDuration;
 var firstClick = true;
 var track = 0;
 
@@ -12,7 +11,6 @@ function play(song) {
     currentSong.play();
     firstClick = false;
     playing = true;
-    trackDuration = currentSong.duration;
     setAlbumArt(song.artPath);
     track = songs.indexOf(song)
 
@@ -27,6 +25,7 @@ function play(song) {
     currentSong.onended = function() {
         next();
     }
+    $("#play").addClass("spinning")
 }
 
 $('body').keyup(function(e){
@@ -117,7 +116,6 @@ $(document).ready(function() {
     )
     play(songs[0]);
     pause();
-
     document.getElementById("trackbar-container").addEventListener("click", seek);
 })
 

@@ -27,7 +27,6 @@ function play(song) {
     currentSong.onended = function() {
         next();
     }
-    $("#play").removeClass("paused")
 }
 
 $('body').keyup(function(e){
@@ -65,10 +64,11 @@ function pause() {
         currentSong.pause();
         playing = false;
         $("#play").addClass("paused")
+        $("#play").removeClass("spinning")
     } else {
         currentSong.play();
         playing = true;
-        $("#play").removeClass("paused")
+        $("#play").addClass("spinning")
     }
 }
 

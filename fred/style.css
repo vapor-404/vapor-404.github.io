@@ -1,6 +1,28 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
 html, body {
     background-color: rgb(15, 15, 10);
     font-family: "Roboto Mono", monospace;
+    height: 100%;
 }
 
 button {
@@ -61,7 +83,6 @@ button:active {
 }
 
 #center-container {
-    position: relative;
     height: 90%;
 }
 
@@ -73,7 +94,7 @@ button:active {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, 2%);
+    transform: translate(-50%, -50%);
 }
 
 #tracklist {

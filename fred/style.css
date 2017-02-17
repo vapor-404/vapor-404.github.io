@@ -58,6 +58,7 @@ button:active {
     height: 4em;
     font-size: 14pt;
     transition: transform .2s ease;
+	transition: .1s ease;
 }
 
 #next:active {

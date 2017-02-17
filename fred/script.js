@@ -221,9 +221,59 @@ var meteorblade = {
     link : "https://blankbanshee.bandcamp.com",
 }
 
+var bonfires = {
+    audioPath : "mp3s/Bonfires.mp3",
+    artPath : "art/nosummernocry.jpg",
+    name : "Bonfires",
+    artist : "Slime Girls",
+    link : "https://slimegirls.bandcamp.com",
+}
+
+var telepath = {
+    audioPath : "mp3s/最後にホーム.mp3",
+    artPath : "art/telepath.jpg",
+    name : "最後にホーム",
+    artist : "t e l e p a t h/HKE",
+    link : "https://telepathtelepath.bandcamp.com/album/--37",
+}
+var gurrenlagann = {
+    audioPath : "mp3s/◌⚔◌ Gurren lagann ◌⚔◌.mp3",
+    artPath : "art/mechadreams.jpg",
+    name : "◌⚔◌ Gurren lagann ◌⚔◌",
+    artist : "『Drip Drop』",
+    link : "https://soundcloud.com/driptothedrop"
+}
+
+var rubber = {
+    audioPath : "mp3s/Rubber.mp3",
+    artPath : "art/moon.jpg",
+    name : "Rubber",
+    artist : "M.O.O.N",
+    link : "http://music.musicofthemoon.com/"
+}
+
+var bipp = {
+    audioPath : "mp3s/BIPP.mp3",
+    artPath : "art/bipp.jpg",
+    name : "BIPP",
+    artist : "SOPHIE",
+    link : "https://soundcloud.com/msmsmsm"
+}
+
+var possession = {
+    audioPath : "mp3s/The Possession.mp3",
+    artPath : "art/trevor.jpg",
+    name : "The Possession",
+    artist : "Trevor Something",
+    link : "https://trevorsomething.bandcamp.com/"
+}
+
 var songs = [
+    telepath,
     forestspirits,
     she,
+    rubber,
+    possession,
     heartonwave,
     warpstar,
     hungryghost,
@@ -232,6 +282,9 @@ var songs = [
     haruko,
     cherryblossoms,
     allthewaydown,
+    gurrenlagann,
+    bipp,
     kuro,
     fujitascale,
+    bonfires,
 ]

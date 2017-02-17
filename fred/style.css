@@ -1,5 +1,5 @@
 html, body {
-    background-color: rgb(15, 15, 15);
+    background-color: rgb(15, 15, 10);
     font-family: "Roboto Mono", monospace;
 }
 
@@ -87,7 +87,7 @@ button:active {
       -ms-user-select: none; /* Internet Explorer/Edge */
           user-select: none; /* Non-prefixed version, currently
                                 supported by Chrome and Opera */
-    height: 20vh;
+    max-height: 20vh;
     overflow-y: scroll;
 }
 

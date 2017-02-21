@@ -1,0 +1,8 @@
+.scene-link {
+    transition: .2s ease;
+}
+
+.enabled {
+    color: blue;
+    cursor: pointer;
+}

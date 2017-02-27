@@ -87,7 +87,7 @@ function hook(str, args) {
 
 }
 
-//==================== CHALLENGE COMMANDS ==========================
+//==================== EXTRA COMMANDS ==========================
 var hookCommands = [
     'chan',
     'date',

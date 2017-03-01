@@ -46,6 +46,7 @@ button:hover {
 }
 button:active {
     border-width: 6px;
+    border-style: double;
 }
 .play {
     width: 5em;

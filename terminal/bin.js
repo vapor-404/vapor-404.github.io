@@ -137,7 +137,7 @@ function weather() {
         }
     }
 
-    var json_url = "http://api.openweathermap.org/data/2.5/weather?q=Morningside+Heights,ny&appid=6e131a2916d5d45d8367b72a4675be0a";
+    var json_url = "https://api.openweathermap.org/data/2.5/weather?q=Morningside+Heights,ny&appid=6e131a2916d5d45d8367b72a4675be0a";
     $.when(
         $.getJSON(json_url)
     ).done(function(json_obj) {

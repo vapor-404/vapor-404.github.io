@@ -1,4 +1,3 @@
-//initializing commands
 $(document).ready(function() {weather()});
 
 function hook(str, args) {
@@ -85,9 +84,16 @@ function hook(str, args) {
         return true
     }
 
+    //test for a web url
+      var pattern = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+      if (pattern.test(str)) {
+          if (!str.startsWith("http")) str = "https://" + str
+          loadURL(str);
+          return true;
+      }
 }
 
-//==================== EXTRA COMMANDS ==========================
+//==================== CHALLENGE COMMANDS ==========================
 var hookCommands = [
     'chan',
     'date',
@@ -98,8 +104,7 @@ var hookCommands = [
 ];
 
 var bookmarks = [
-    ['cstheory', 'http://www.cs.columbia.edu/~aho/cs3261/'],
-    ['listentothis', "https://www.reddit.com/r/listentothis/"],
+    ['messenger', "https://www.messenger.com/"],
     ['pawprint', 'https://pawprtprodmprt1.cuit.columbia.edu/myprintcenter/'],
     ['play', 'https://play.google.com/music/listen?hl=en&u=0#/wmp'],
     ['spotify', 'https://play.spotify.com/collection/songs'],
@@ -114,40 +119,52 @@ function machine(str) {
 }
 
 function k_to_f(kelvin) {
-	return ((9 / 5) * (kelvin - 273) + 32).toFixed(0);
+    return ((9 / 5) * (kelvin - 273) + 32).toFixed(0);
 }
 
 function weather() {
-    //this might throw a mixed content error, but running it from a local file works
-    var json_url = "http://api.openweathermap.org/data/2.5/weather?q=Morningside+Heights,ny&appid=6e131a2916d5d45d8367b72a4675be0a";
-    var city;
-    var temp_curr;
-    var temp_low;
-    var temp_high;
-    var description;
-    var weatherCode;
-    var humidity;
 
+    //first check if the localStorage version is more than 20 minutes old
+    if (localStorage.getItem("cachedWeatherData") != null) {
+        var weatherData = JSON.parse(localStorage.getItem("cachedWeatherData"));
+        var now = new Date()
+        var then = weatherData.timestamp;
+        var diff = Math.abs(((now - then) / 1000)/60)
+        if (diff < 20) {
+            displayWeather(weatherData);
+            console.log("using cached weather data")
+            return;
+        }
+    }
+
+    var json_url = "http://api.openweathermap.org/data/2.5/weather?q=Morningside+Heights,ny&appid=6e131a2916d5d45d8367b72a4675be0a";
     $.when(
         $.getJSON(json_url)
     ).done(function(json_obj) {
-		city = json_obj["name"];
-		temp_curr = k_to_f(json_obj["main"]["temp"]);
-		temp_low = k_to_f(json_obj["main"]["temp_min"]);
-		temp_high = k_to_f(json_obj["main"]["temp_max"]);
-		description = json_obj.weather[0].description;
-        weatherCode = Number(json_obj["weather"][0]["id"]);
-        humidity = Number(json_obj["main"]["humidity"])
-        var disgusting = (weatherCode > 500
-            && weatherCode < 800
-            || Number(temp_low) < 30
-            || Number(temp_high) > 95
-            || humidity > 75);
-        description = description.charAt(0).toUpperCase() + description.slice(1)
-        var weatherString = "It's " + temp_curr + "&deg; out. " + description + ". "
-        disgusting ? weatherString += "Disgusting." : weatherString += "Not bad."
-        print(weatherString)
-	})
+        displayWeather(json_obj)
+        //cache the new, updated weather data
+        json_obj.timestamp = new Date();
+        localStorage.setItem("cachedWeatherData", JSON.stringify(json_obj))
+    })
+}
+
+function displayWeather(json_obj) {
+    var city = json_obj["name"];
+    var temp_curr = k_to_f(json_obj["main"]["temp"]);
+    var temp_low = k_to_f(json_obj["main"]["temp_min"]);
+    var temp_high = k_to_f(json_obj["main"]["temp_max"]);
+    var description = json_obj.weather[0].description;
+    var weatherCode = Number(json_obj["weather"][0]["id"]);
+    var humidity = Number(json_obj["main"]["humidity"])
+    var disgusting = (weatherCode > 500
+        && weatherCode < 800
+        || Number(temp_low) < 30
+        || Number(temp_high) > 95
+        || humidity > 75);
+    description = description.charAt(0).toUpperCase() + description.slice(1)
+    var weatherString = "It's " + temp_curr + "&deg; out. " + description + ". "
+    disgusting ? weatherString += "Disgusting." : weatherString += "Not bad."
+    print(weatherString)
 }
 
 function loadURL(url) {

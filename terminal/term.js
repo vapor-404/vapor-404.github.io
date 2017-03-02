@@ -2,9 +2,45 @@ $("#terminal").click(function() {
     if (!editing) $("#input").focus();
 })
 
+//bind paste inputs for non-styled text
+document.getElementById("input").addEventListener('paste', handlePaste);
+
+function handlePaste(e) {
+    var clipboardData, pastedData;
+    e.stopPropagation();
+    e.preventDefault();
+    clipboardData = e.clipboardData || window.clipboardData;
+    pastedData = clipboardData.getData('text');
+    $('#input').html(pastedData);
+}
+
 $(document).ready(function() {
-    init()
+    //le current year meme
+    if (navigator.appVersion.indexOf("Win")!=-1) {
+        echo((">using Windows in " + new Date().getFullYear()).split(" "))
+        //source code pro looks weird at 11pt, let's fix that
+        $("<style> pre, #prompt, .prompt, #clock, #date, #editArea, #filename, .output {font-family: \"Roboto Mono\", monospace}</style>").appendTo("head")
+    } else if (navigator.appVersion.indexOf("Mac")!=-1) {
+        echo(">using MacOS".split(" "))
+    }
+    print(getTime())
+    init();
 })
+
+function getTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var pm = false;
+    if (m < 10) m = "0" + m;
+    if (h >= 13) {
+        h -= 12;
+        pm = true;
+    } else if (h < 1) {
+        h += 12
+    }
+    return h + ":" + m + (pm ? " PM" : " AM")
+}
 
 var userName;
 var userMachine;
@@ -94,7 +130,7 @@ function handle(text) {
     //intercepting the function here to search
     if (searchString(input)) {
         print("Searching for " + input.slice(0, input.length-3) + "...")
-        return
+        return;
     }
 
     var firstWord = input;
@@ -145,7 +181,8 @@ function fancyRender(text, color, size) {
         color = "inherit"
     }
     if (size == undefined) {
-        size = "11"
+        //scale the font with whatever the currently defined prompt is
+        size = $("#prompt").css("font-size")
     }
     pre += "color:" + color + "; "
     pre += "font-size:" + size + 'pt;"'
@@ -205,11 +242,8 @@ function help(input) {
     printStr = ""
     if (typeof bookmarks != "undefined" && bookmarks.length > 0) {
         fancyRender("bookmarks", "lightgray")
-        for (var i=0; i<bookmarks.length; i++) {
-            printStr +=  "> " +(bookmarks[i][0]) + " ";
-        }
+        renderBookmarks();
     }
-    print(printStr)
 
     printStr = ""
     if (typeof fileFunctions != "undefined" && fileFunctions.length > 0) {
@@ -234,11 +268,7 @@ function ls(input) {
     //horrible. converts input to a string by adding an empty string.
     if(input.slice(input.length - 2, input.length) + "" === "-b") {
         fancyRender("bookmarks", "lightgray")
-        if (typeof bookmarks != "undefined" && bookmarks.length > 0) {
-            for (var i=0; i<bookmarks.length; i++) {
-                print(bookmarks[i][0]);
-            }
-        }
+        renderBookmarks();
         return;
     }
     if(input.slice(input.length - 2, input.length) + "" === "-c") {
@@ -272,7 +302,8 @@ function echo(args) {
     }
     var printStr = args.join(" ")
     //greentexting
-    if(printStr.indexOf("&gt;") === 0) {
+    if(printStr.indexOf("&gt;") === 0 ||
+        printStr.indexOf(">") === 0) {
         printStr = cssColor(printStr, "#789922")
     }
     print(printStr);
@@ -304,6 +335,8 @@ function search(s) {
     print("Usage: [query] -x")
     print("x is a switch for: ")
     print("a:   amazon")
+    print("i:   g-images")
+    print("g:   google")
     print("m:   wolfram alpha")
     print("v:   vimeo")
     print("w:   wikipedia")
@@ -324,7 +357,7 @@ function addInput(str) {
     if (str === "" || /^[ ]+$/.test(str)) {
         return;
     }
-    if (lastInputs[0] === str){return};
+    if (lastInputs[0] === str){ return};
     if (lastInputs.length > 0) {
         if (lastInputs[lastInputs.length - 1] != str) lastInputs.unshift(str)
     } else lastInputs.unshift(str);
@@ -365,19 +398,27 @@ function autocomplete(string) {
             }
         }
     }
-	//autocompleting based on filenames
+    //autocompleting based on filenames
     console.log(string)
-	var tempCommand = string.split(" ")[0];
-	if (fileFunctions.indexOf(tempCommand) >= 0
-			&& string.split(" ").length > 1) {
-		var beginName = string.split(" ")[1];
-		Object.keys(files).forEach(function(key, index) {
-			if (key.indexOf(beginName) === 0)	{
+    var tempCommand = string.split(" ")[0];
+    if (fileFunctions.indexOf(tempCommand) >= 0
+            && string.split(" ").length > 1) {
+        var beginName = string.split(" ")[1];
+        Object.keys(files).forEach(function(key, index) {
+            if (key.indexOf(beginName) === 0)   {
                 document.getElementById("input").innerHTML = tempCommand + " " + key
                 return
             }
-		})
-	}
+        })
+    }
+
+    //looking through history
+    for (var i=0; i<lastInputs.length; i++) {
+        if (lastInputs[i].indexOf(string) === 0) {
+            document.getElementById("input").innerHTML = lastInputs[i];
+            return
+        }
+    }
 }
 
 //====================  SEARCHING ==================================
@@ -400,16 +441,26 @@ function searchString(query) {
                 "https://en.wikipedia.org/w/index.php?search=" +
                 query.replace(" ", "%20");
             return true;
-    	case "-m":
-    	    window.location =
-    		"http://www.wolframalpha.com/input/?i=" +
-    		query.replace("+", "%2B");
+        case "-m":
+            window.location =
+            "http://www.wolframalpha.com/input/?i=" +
+            query.replace("+", "%2B");
             return true;
         case "-v":
             window.location =
             "https://vimeo.com/search?q=" +
             query.replace(" ", "+");
             return true;
+        case "-g":
+            window.location =
+            "https://www.google.com/#q=" +
+            query.replace(" ", "+")
+            return true
+        case "-i":
+            window.location =
+            "https://www.google.com/search?tbm=isch&q=" +
+            query.replace(" ", "+")
+            return true
     }
     return false;
 }
@@ -426,4 +477,12 @@ function rollDie(args) {
 //returns a span with the color of a string, good for chaining with print()
 function cssColor(string, colorName) {
     return "<span style='color:" + colorName + "'>" + string + "</span>"
+}
+
+function renderBookmarks() {
+    var outputstr = ""
+    for (var i=0; i<bookmarks.length; i++) {
+        outputstr += '> <a href="' + bookmarks[i][1] + '">' + bookmarks[i][0] + '</a> '
+    }
+    print(outputstr)
 }

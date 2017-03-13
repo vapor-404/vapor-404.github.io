@@ -223,7 +223,6 @@ function history(input) {
 
 function help(input) {
     //add some kind of help for various functions (like rendering)
-    echo((">not using ls").split(" "))
     fancyRender("general", "lightgray")
     var printStr = ""
     for (var i=0; i<terminalFunctions.length; i++) {

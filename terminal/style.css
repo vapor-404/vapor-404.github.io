@@ -102,6 +102,8 @@ pre {
 	animation: benis .5s;
 }
 
+/* uncomment for a gradient bar at the top */
+/*
 #terminal-container::before {
 	content: '';
 	position: absolute;
@@ -111,6 +113,7 @@ background-image: linear-gradient(to right, #43e97b 0%, #38f9d7 100%);
 	top: -10px;
 	left: 0;
 }
+*/
 
 #clock, #date {
 	float: right;

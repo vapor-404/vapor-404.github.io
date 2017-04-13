@@ -266,9 +266,34 @@ var possession = {
     link : "https://trevorsomething.bandcamp.com/"
 }
 
+var sniper = {
+    audioPath : "mp3s/sniper rouge.mp3",
+    artPath : "art/sniper.jpg",
+    name : "Sniper Rouge feat. Emi (Satellite Young)",
+    artist : "Mitch Murder",
+    link : "https://mitchmurder.bandcamp.com/"
+}
+
+var mirage = {
+    audioPath : "mp3s/mirage.mp3",
+    artPath : "art/mirage.jpg",
+    name : "Mirage",
+    artist : "Mitch Murder",
+    link : "https://mitchmurder.bandcamp.com/"
+}
+
+var breeze = {
+    audioPath : "mp3s/breeze.mp3",
+    artPath : "art/s2.jpg",
+    name : "Breeze",
+    artist : "Mitch Murder",
+    link : "https://mitchmurder.bandcamp.com/"
+}
+
 var songs = [
     telepath,
     forestspirits,
+    breeze,
     she,
     rubber,
     possession,
@@ -278,11 +303,13 @@ var songs = [
     meteorblade,
     tracytzu,
     haruko,
+    sniper,
     cherryblossoms,
     allthewaydown,
     gurrenlagann,
     bipp,
     kuro,
+    mirage,
     fujitascale,
     bonfires,
 ]

@@ -6,3 +6,5 @@ Why put them in the list, you ask? Autocompletion and function calling from a st
 
 **If you can, please get your own OpenWeatherMap API key and put it in `weather()`.**
 The free OpenWeatherMap plan is limited to 60 API calls per minute for each key. This page won't send a new request if the current cached weather data is less than 20 minutes old, but if more people start using this startpage eventually the number of requests will become a problem.
+
+Also, the weather won't work unless you run the page from a local file. OpenWeatherMap uses http while Github uses https, and browsers don't like that.

@@ -15,14 +15,6 @@ function handlePaste(e) {
 }
 
 $(document).ready(function() {
-    //le current year meme
-    if (navigator.appVersion.indexOf("Win")!=-1) {
-        echo((">using Windows in " + new Date().getFullYear()).split(" "))
-        //source code pro looks weird at 11pt, let's fix that
-        $("<style> pre, #prompt, .prompt, #clock, #date, #editArea, #filename, .output {font-family: \"Roboto Mono\", monospace}</style>").appendTo("head")
-    } else if (navigator.appVersion.indexOf("Mac")!=-1) {
-        echo(">using MacOS".split(" "))
-    }
     print(getTime())
     init();
 })

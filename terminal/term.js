@@ -258,6 +258,10 @@ function help(input) {
 }
 
 function ls(input) {
+    if (typeof input === 'undefined') {
+        help(input)
+        return
+    }
     //horrible. converts input to a string by adding an empty string.
     if(input.slice(input.length - 2, input.length) + "" === "-b") {
         fancyRender("bookmarks", "lightgray")

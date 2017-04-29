@@ -1,5 +1,3 @@
-$(document).ready(function() {weather()});
-
 function hook(str, args) {
 
     if (str[0] == '~') {

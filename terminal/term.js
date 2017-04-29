@@ -16,7 +16,8 @@ function handlePaste(e) {
 
 $(document).ready(function() {
     print(getTime())
-    init();
+    weather()
+    init()
 })
 
 function getTime() {

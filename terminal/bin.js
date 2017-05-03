@@ -358,7 +358,7 @@ function screenfetch(args) {
         var currentLine = ''
         if (i<artArray.length) {
             //add justifying spaces
-            currentLine += cssColor(artArray[i], 'hotpink') + (' '.repeat(width-artArray[i].length))
+            currentLine += cssColor(artArray[i], 'lightgray') + (' '.repeat(width-artArray[i].length))
         }
         if (i<bodyArray.length) {
             currentLine += spacer + bodyArray[i]

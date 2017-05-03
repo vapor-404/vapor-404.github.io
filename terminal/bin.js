@@ -1,3 +1,8 @@
+var timerActive = false;
+var timerCounter;
+
+$(document).ready(function() {weather()});
+
 function hook(str, args) {
 
     if (str[0] == '~') {
@@ -82,13 +87,13 @@ function hook(str, args) {
         return true
     }
 
-    //test for a web url
-      var pattern = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
-      if (pattern.test(str)) {
-          if (!str.startsWith("http")) str = "https://" + str
-          loadURL(str);
-          return true;
-      }
+	//test for a web url
+	  var pattern = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+	  if (pattern.test(str)) {
+		  if (!str.startsWith("http")) str = "https://" + str
+		  loadURL(str);
+		  return true;
+	  }
 }
 
 //==================== CHALLENGE COMMANDS ==========================
@@ -98,13 +103,17 @@ var hookCommands = [
     'dice',
     'reddit',
     'time',
+    'timer',
+    'screenfetch',
     'weather',
 ];
 
 var bookmarks = [
+    ['drive', "https://drive.google.com/drive/u/0/my-drive"],
+    ['foobar', 'https://www.google.com/foobar/'],
+    ['listentothis', "https://www.reddit.com/r/listentothis/"],
     ['messenger', "https://www.messenger.com/"],
-    ['pawprint', 'https://pawprtprodmprt1.cuit.columbia.edu/myprintcenter/'],
-    ['play', 'https://play.google.com/music/listen?hl=en&u=0#/wmp'],
+    ['play', 'https://play.google.com/music/listen?hl=en&u=0#/wmp'],,
     ['spotify', 'https://play.spotify.com/collection/songs'],
 ]
 
@@ -117,7 +126,7 @@ function machine(str) {
 }
 
 function k_to_f(kelvin) {
-    return ((9 / 5) * (kelvin - 273) + 32).toFixed(0);
+	return ((9 / 5) * (kelvin - 273) + 32).toFixed(0);
 }
 
 function weather() {
@@ -134,8 +143,7 @@ function weather() {
             return;
         }
     }
-    //You'll get an error here (and thus no weather) if you're not opening this page from a local file. 
-    //Sucks to suck.
+
     var json_url = "http://api.openweathermap.org/data/2.5/weather?q=Morningside+Heights,ny&appid=6e131a2916d5d45d8367b72a4675be0a";
     $.when(
         $.getJSON(json_url)
@@ -144,7 +152,7 @@ function weather() {
         //cache the new, updated weather data
         json_obj.timestamp = new Date();
         localStorage.setItem("cachedWeatherData", JSON.stringify(json_obj))
-    })
+	})
 }
 
 function displayWeather(json_obj) {
@@ -220,4 +228,207 @@ function chan(s) {
 
 function dice(s) {
     print("Usage: [number]d[number]+[modifier]")
+}
+
+function timer(s) {
+    if (s == "stop") {
+        if (typeof(timerCounter) == "undefined") {
+            print("No active timer.")
+        } else {
+            $("#gradientBar").removeClass("secondTransition")
+            $("#gradientBar").css("width", "100%")
+            clearInterval(timerCounter)
+            setCloseConfirm(false)
+            timerActive = false;
+            $("#timer").remove();
+        }
+        return;
+    }
+
+    //example: 12h5m30s or 12h5s
+    var timerRegex = /^([0-9]+h)?([0-9]+m)?([0-9]+s)?$/
+
+    if (!timerRegex.test(s) || s == "") {
+        print("Usage: timer XhXmXs || timer stop")
+        return
+    }
+
+    //get the total time in seconds. this is gross, but i'm tired.
+    var hours, minutes, seconds
+    if (s.includes("h")) {
+        hours = Number(s.split("h")[0])
+        s = s.split("h")[1]
+    }
+    if (s.includes("m")) {
+        minutes = Number(s.split("m")[0])
+        s = s.split("m")[1]
+    }
+    if (s.includes("s")) {
+        seconds = Number(s.split("s")[0])
+    }
+    if (typeof(hours) == "undefined") hours = 0;
+    if (typeof(minutes) == "undefined") minutes = 0;
+    if (typeof(seconds) == "undefined") seconds = 0;
+    seconds = hours * 3600 + minutes * 60 + seconds
+    if (seconds <= 0) {
+        print("Try an actual number :^)")
+        return
+    }
+
+    if (timerActive) {
+        print("You already have a timer running.")
+        return
+    }
+
+    var totalSeconds = seconds-1
+    $("#gradientBar").addClass("secondTransition")
+    setCloseConfirm(true)
+    timerActive = true
+    seconds--
+    $("#gradientBar").css("width", ((seconds-1)/totalSeconds)*100 + "%")
+    var timerObject = $("<div id='timer'></div>").insertBefore("#prompt")
+    var date = new Date(null);
+    date.setSeconds(seconds); // specify value for SECONDS here
+    var result = date.toISOString().substr(11, 8);
+    $("#timer").html(result)
+
+    timerCounter = setInterval(function() {
+        seconds--
+        $("#gradientBar").css("width", (seconds-1)/totalSeconds*100 + "%")
+
+        var date = new Date(null);
+        date.setSeconds(seconds); // specify value for SECONDS here
+        var result = date.toISOString().substr(11, 8)
+        $("#timer").html(result)
+        if (seconds <= 0) {
+            $("#gradientBar").removeClass("secondTransition")
+            $("#gradientBar").css("width", "100%")
+            clearInterval(timerCounter)
+            setCloseConfirm(false)
+            timerActive = false
+            $("#timer").remove()
+            if (document.hidden) playAirhorn()
+            fancyRender("time's up", "dodgerblue")
+        }
+    }, 1000)
+
+}
+
+function screenfetch(args) {
+    var spacer = '  '
+
+    var screenfetchBody =  cssColor(userName+'@'+userMachine, 'lightgray')+'\n'+
+        cssColor('OS: ', 'lightgray')+getOS()+'\n'+
+        cssColor('Browser: ', 'lightgray')+getBrowser()+'\n'+
+        cssColor('Engine: ', 'lightgray')+navigator.product+'\n'+
+        cssColor('Resolution: ', 'lightgray')+window.screen.width+'x'+window.screen.height+'\n'+
+        cssColor('Language: ', 'lightgray')+navigator.language+'\n'+
+        cssColor('Plugins: ', 'lightgray')+navigator.plugins.length
+
+    var terminalArt = JSON.parse(localStorage.getItem('textFiles'))['art']
+    if (terminalArt == null && !args.includes('t')) {
+        terminalArt = ' _________\n'+
+        '|  _____  |\\\n'+
+        '| |\\ ___| | \\\n'+
+        '| | |   | | |\n'+
+        '| | |___| | |\n'+
+        '\\ | |____\\| |\n'+
+        ' \\|_________| '
+    } else if (terminalArt == null) {
+        terminalArt = ''
+        spacer = ''
+    }
+
+    //combine it with the screenfetch body
+    var artArray = terminalArt.split('\n')
+    var bodyArray = screenfetchBody.split('\n')
+
+    //standardize width
+    var width=0
+    for (var i=0; i<artArray.length; i++) {
+        if (artArray[i].length > width) {
+            width = artArray[i].length
+        }
+    }
+
+    for (var i=0; i<artArray.length || i<bodyArray.length; i++) {
+        var currentLine = ''
+        if (i<artArray.length) {
+            //add justifying spaces
+            currentLine += cssColor(artArray[i], 'hotpink') + (' '.repeat(width-artArray[i].length))
+        }
+        if (i<bodyArray.length) {
+            currentLine += spacer + bodyArray[i]
+        }
+        print(currentLine)
+    }
+}
+
+function getOS() {
+    var OSName="Unknown OS"
+    if (navigator.appVersion.indexOf("Win")!=-1) OSName="Windows"
+    if (navigator.appVersion.indexOf("Mac")!=-1) OSName="MacOS"
+    if (navigator.appVersion.indexOf("X11")!=-1) OSName="UNIX"
+    if (navigator.appVersion.indexOf("Linux")!=-1) OSName="Linux"
+    return OSName
+}
+
+function getBrowser() {
+    var nVer = navigator.appVersion;
+    var nAgt = navigator.userAgent;
+    var browserName  = navigator.appName;
+    var fullVersion  = ''+parseFloat(navigator.appVersion); 
+    var nameOffset,verOffset,ix;
+
+    // In Opera, the true version is after "Opera" or after "Version"
+    if ((verOffset=nAgt.indexOf("Opera"))!=-1) {
+     browserName = "Opera";
+     fullVersion = nAgt.substring(verOffset+6);
+     if ((verOffset=nAgt.indexOf("Version"))!=-1) 
+       fullVersion = nAgt.substring(verOffset+8);
+    }
+    // In MSIE, the true version is after "MSIE" in userAgent
+    else if ((verOffset=nAgt.indexOf("MSIE"))!=-1) {
+     browserName = "Microsoft Internet Explorer";
+     fullVersion = nAgt.substring(verOffset+5);
+    }
+    // In Chrome, the true version is after "Chrome" 
+    else if ((verOffset=nAgt.indexOf("Chrome"))!=-1) {
+     browserName = "Chrome";
+     fullVersion = nAgt.substring(verOffset+7);
+    }
+    // In Safari, the true version is after "Safari" or after "Version" 
+    else if ((verOffset=nAgt.indexOf("Safari"))!=-1) {
+     browserName = "Safari";
+     fullVersion = nAgt.substring(verOffset+7);
+     if ((verOffset=nAgt.indexOf("Version"))!=-1) 
+       fullVersion = nAgt.substring(verOffset+8);
+    }
+    // In Firefox, the true version is after "Firefox" 
+    else if ((verOffset=nAgt.indexOf("Firefox"))!=-1) {
+     browserName = "Firefox";
+     fullVersion = nAgt.substring(verOffset+8);
+    }
+    // In most other browsers, "name/version" is at the end of userAgent 
+    else if ( (nameOffset=nAgt.lastIndexOf(' ')+1) < 
+              (verOffset=nAgt.lastIndexOf('/')) ) 
+    {
+     browserName = nAgt.substring(nameOffset,verOffset);
+     fullVersion = nAgt.substring(verOffset+1);
+     if (browserName.toLowerCase()==browserName.toUpperCase()) {
+      browserName = navigator.appName;
+     }
+    }
+    // trim the fullVersion string at semicolon/space if present
+    if ((ix=fullVersion.indexOf(";"))!=-1)
+       fullVersion=fullVersion.substring(0,ix);
+    if ((ix=fullVersion.indexOf(" "))!=-1)
+       fullVersion=fullVersion.substring(0,ix);
+
+    majorVersion = parseInt(''+fullVersion,10);
+    if (isNaN(majorVersion)) {
+     fullVersion  = ''+parseFloat(navigator.appVersion); 
+    }
+
+    return browserName+' '+fullVersion
 }

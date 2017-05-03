@@ -1,4 +1,4 @@
-var editBlob = '<div id="editWrapper"><textarea id="editArea" rows="40" cols="80" spellcheck="false"></textarea></div>'
+var editElement = '<div id="editWrapper"><textarea id="editArea" rows="40" cols="120" spellcheck="false"></textarea></div>'
 var editing = false;
 var currentFileName = ""
 var files = {}
@@ -10,10 +10,10 @@ var fileFunctions = [
     'cat',
 ]
 
-//files are stored as an object with keys (filenames) and values (innerHTML)
+var lastTitle = document.title
 
-//add some grabbing from local storage here, package files into a json dict
-//and then get 'em
+//files are stored as objects with keys (filenames) and values (innerHTML)
+
 if (localStorage.getItem("textFiles")) {
     files = JSON.parse(localStorage.getItem("textFiles"))
 }
@@ -38,7 +38,7 @@ function edit(fileName) {
     }
 
     //open the editor window
-    $("#terminal").append(editBlob);
+    $("#terminal").append(editElement);
 	$("#filename").html(fileName)
     currentFileName = fileName;
     //open it if it exists
@@ -49,6 +49,10 @@ function edit(fileName) {
     editing = true;
     files[currentFileName] = editArea.value;
     localStorage.setItem("textFiles", JSON.stringify(files))
+
+    //update the tab title
+    document.title += "/" + fileName
+    setCloseConfirm(true);
 }
 
 function save() {
@@ -74,6 +78,8 @@ function close() {
     localStorage.setItem("textFiles", JSON.stringify(files))
     $("#editWrapper").remove();
 	$("#filename").html("");
+	document.title = lastTitle
+    setCloseConfirm(false)
 }
 
 function rm(fileName) {
@@ -88,12 +94,15 @@ function rm(fileName) {
         if (editing) {
             $("#editWrapper").remove()
 			$("#filename").html("");
+			$("#input").unbind("keydown.vim");
             editing = false;
+            document.title = lastTitle
         }
     } else {
         print(fileName + " doesn't exist.")
     }
     localStorage.setItem("textFiles", JSON.stringify(files))
+    setCloseConfirm(false)
 }
 
 function cat(fileName) {
@@ -103,7 +112,7 @@ function cat(fileName) {
     }
 
     if (files.hasOwnProperty(fileName)) {
-        print(files[fileName])
+        print(formatURLs(files[fileName]))
         return
     }
 
@@ -112,4 +121,11 @@ function cat(fileName) {
         return
     }
     print("No file or function named '" + fileName + "'.")
+}
+
+function formatURLs(text) {
+    var urlRegex = /(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\?\=\/\w \.-]*)*\/?/
+    return text.replace(urlRegex, function(url) {
+        return '<a href="' + url + '">' + url + '</a>';
+    })
 }

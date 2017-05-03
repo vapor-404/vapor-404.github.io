@@ -6,33 +6,32 @@ $("#terminal").click(function() {
 document.getElementById("input").addEventListener('paste', handlePaste);
 
 function handlePaste(e) {
-    var clipboardData, pastedData;
-    e.stopPropagation();
-    e.preventDefault();
-    clipboardData = e.clipboardData || window.clipboardData;
-    pastedData = clipboardData.getData('text');
-    $('#input').html(pastedData);
+	var clipboardData, pastedData;
+	e.stopPropagation();
+	e.preventDefault();
+	clipboardData = e.clipboardData || window.clipboardData;
+	pastedData = clipboardData.getData('text');
+	$('#input').html(pastedData);
 }
 
 $(document).ready(function() {
-    print(getTime())
-    weather()
-    init()
+	print(getTime())
+    init();
 })
 
 function getTime() {
-    var today = new Date();
-    var h = today.getHours();
-    var m = today.getMinutes();
-    var pm = false;
-    if (m < 10) m = "0" + m;
-    if (h >= 13) {
-        h -= 12;
-        pm = true;
-    } else if (h < 1) {
-        h += 12
-    }
-    return h + ":" + m + (pm ? " PM" : " AM")
+	var today = new Date();
+	var h = today.getHours();
+	var m = today.getMinutes();
+	var pm = false;
+	if (m < 10) m = "0" + m;
+	if (h >= 13) {
+		h -= 12;
+		pm = true;
+	} else if (h < 1) {
+		h += 12
+	}
+	return h + ":" + m + (pm ? " PM" : " AM")
 }
 
 var userName;
@@ -174,7 +173,7 @@ function fancyRender(text, color, size) {
         color = "inherit"
     }
     if (size == undefined) {
-        //scale the font with whatever the currently defined prompt is
+		//scale the font with whatever the currently defined prompt is
         size = $("#prompt").css("font-size")
     }
     pre += "color:" + color + "; "
@@ -200,7 +199,8 @@ var terminalFunctions = [
     'search'];
 
 function clear(input) {
-    var data = '<p id="prompt" class="prompt">' + getName() + '@' + getMachine() + ':$&nbsp;</p><pre id="input" contenteditable="true" autofocus="true" spellcheck="false"></pre>'
+    var data = '<p id="prompt" class="prompt">' + getName() + '@' + getMachine() +
+    ':$&nbsp;</p><pre id="input" contenteditable="true" autofocus="true" spellcheck="false"></pre>'
     document.getElementById("terminal").innerHTML = data;
     init();
 }
@@ -258,10 +258,6 @@ function help(input) {
 }
 
 function ls(input) {
-    if (typeof input === 'undefined') {
-        help(input)
-        return
-    }
     //horrible. converts input to a string by adding an empty string.
     if(input.slice(input.length - 2, input.length) + "" === "-b") {
         fancyRender("bookmarks", "lightgray")
@@ -332,9 +328,10 @@ function search(s) {
     print("Usage: [query] -x")
     print("x is a switch for: ")
     print("a:   amazon")
-    print("i:   g-images")
-    print("g:   google")
+	print("i:   g-images")
+	print("g:   google")
     print("m:   wolfram alpha")
+    print("u:   go to a url")
     print("v:   vimeo")
     print("w:   wikipedia")
     print("y:   youtube")
@@ -395,19 +392,19 @@ function autocomplete(string) {
             }
         }
     }
-    //autocompleting based on filenames
+	//autocompleting based on filenames
     console.log(string)
-    var tempCommand = string.split(" ")[0];
-    if (fileFunctions.indexOf(tempCommand) >= 0
-            && string.split(" ").length > 1) {
-        var beginName = string.split(" ")[1];
-        Object.keys(files).forEach(function(key, index) {
-            if (key.indexOf(beginName) === 0)   {
+	var tempCommand = string.split(" ")[0];
+	if (fileFunctions.indexOf(tempCommand) >= 0
+			&& string.split(" ").length > 1) {
+		var beginName = string.split(" ")[1];
+		Object.keys(files).forEach(function(key, index) {
+			if (key.indexOf(beginName) === 0)	{
                 document.getElementById("input").innerHTML = tempCommand + " " + key
                 return
             }
-        })
-    }
+		})
+	}
 
     //looking through history
     for (var i=0; i<lastInputs.length; i++) {
@@ -425,7 +422,7 @@ function searchString(query) {
     query = query.slice(0, query.length-3); //remove " -x"
     switch (modifier) {
         case "-a":
-            window.location = "http://www.smile.amazon.com/s/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=" +
+            window.location = "https://smile.amazon.com/s/?url=search-alias%3Daps&field-keywords=" +
             query.replace(" ", "+");
             return true;
         case "-y":
@@ -438,26 +435,29 @@ function searchString(query) {
                 "https://en.wikipedia.org/w/index.php?search=" +
                 query.replace(" ", "%20");
             return true;
-        case "-m":
-            window.location =
-            "http://www.wolframalpha.com/input/?i=" +
-            query.replace("+", "%2B");
+    	case "-m":
+    	    window.location =
+    		"http://www.wolframalpha.com/input/?i=" +
+    		query.replace("+", "%2B");
             return true;
         case "-v":
             window.location =
             "https://vimeo.com/search?q=" +
             query.replace(" ", "+");
             return true;
-        case "-g":
-            window.location =
-            "https://www.google.com/#q=" +
-            query.replace(" ", "+")
-            return true
-        case "-i":
-            window.location =
-            "https://www.google.com/search?tbm=isch&q=" +
-            query.replace(" ", "+")
-            return true
+		case "-g":
+			window.location =
+			"https://www.google.com/#q=" +
+			query.replace(" ", "+")
+			return true
+		case "-i":
+			window.location =
+			"https://www.google.com/search?tbm=isch&q=" +
+			query.replace(" ", "+")
+			return true
+		case "-i":
+			window.location = encodeURI(query)
+			return true
     }
     return false;
 }
@@ -471,7 +471,7 @@ function rollDie(args) {
     print(randRange(Number(args.substr(1))));
 }
 
-//returns a span with the color of a string, good for chaining with print()
+//returns a span with the color of a string, good for chaining
 function cssColor(string, colorName) {
     return "<span style='color:" + colorName + "'>" + string + "</span>"
 }
@@ -482,4 +482,39 @@ function renderBookmarks() {
         outputstr += '> <a href="' + bookmarks[i][1] + '">' + bookmarks[i][0] + '</a> '
     }
     print(outputstr)
+}
+
+//if true, ask for confirmation to close the tab
+function setCloseConfirm(bool) {
+    if (bool) {
+        window.onbeforeunload = function (e) {
+            e = e || window.event;
+
+            // For IE and Firefox prior to version 4
+            if (e) {
+                e.returnValue = 'Sure?';
+            }
+
+            // For Safari
+            return 'Sure?';
+        };
+    } else {
+        window.onbeforeunload = function() {}
+    }
+}
+
+function playAirhorn() {
+		var airhorn = new Audio("airhorn.mp3");
+		airhorn.play();
+		airhorn.currentTime = 0;
+		if (epilepsy == true) { flash() }
+		if (localStorage.airhorncount) {
+			localStorage.airhorncount++;
+			if (localStorage.airhorncount == 100 ||
+				localStorage.airhorncount % 100 == 0) {
+				prompt("Congratulations!\nYou've airhorned " + localStorage.airhorncount + " times!")
+			}
+		} else {
+			localStorage.airhorncount = 1
+		}
 }

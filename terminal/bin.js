@@ -113,7 +113,7 @@ var bookmarks = [
     ['foobar', 'https://www.google.com/foobar/'],
     ['listentothis', "https://www.reddit.com/r/listentothis/"],
     ['messenger', "https://www.messenger.com/"],
-    ['play', 'https://play.google.com/music/listen?hl=en&u=0#/wmp'],,
+    ['play', 'https://play.google.com/music/listen?hl=en&u=0#/wmp'],
     ['spotify', 'https://play.spotify.com/collection/songs'],
 ]
 
@@ -324,8 +324,11 @@ function screenfetch(args) {
         cssColor('Resolution: ', 'lightgray')+window.screen.width+'x'+window.screen.height+'\n'+
         cssColor('Language: ', 'lightgray')+navigator.language+'\n'+
         cssColor('Plugins: ', 'lightgray')+navigator.plugins.length
-
-    var terminalArt = JSON.parse(localStorage.getItem('textFiles'))['art']
+    if (localStorage != null) {
+    	var terminalArt = JSON.parse(localStorage.getItem('textFiles'))['art']
+    } else {
+	var terminalArt = null
+    }
     if (terminalArt == null && !args.includes('t')) {
         terminalArt = ' _________\n'+
         '|  _____  |\\\n'+

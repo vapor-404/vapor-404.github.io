@@ -1,6 +1,6 @@
 Welcome, from the /wg/ sticky. To add a function to the terminal, write it in bin.js because term.js is where all the terminal-handling code and the most basic functions are. It's also pretty gross.
 
-If you do add a function, you also have to put its name in the hookCommands list, (also in bin.js)
+If you do add a function, you also have to put its name in the hookCommands list. (also in bin.js)
 
 Why put them in the list, you ask? Autocompletion and function calling from a string without using `eval()`. I could have made each function its own object with a name and everything, but the original version of this terminal was made in a day for a coding challenge, and I haven't gotten around to fixing it yet.
 

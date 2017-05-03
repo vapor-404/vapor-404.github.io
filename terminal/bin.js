@@ -324,7 +324,7 @@ function screenfetch(args) {
         cssColor('Resolution: ', 'lightgray')+window.screen.width+'x'+window.screen.height+'\n'+
         cssColor('Language: ', 'lightgray')+navigator.language+'\n'+
         cssColor('Plugins: ', 'lightgray')+navigator.plugins.length
-    if (localStorage != null) {
+    if (localStorage.getItem('textFiles') != null) {
     	var terminalArt = JSON.parse(localStorage.getItem('textFiles'))['art']
     } else {
 	var terminalArt = null

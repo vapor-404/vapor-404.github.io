@@ -1,29 +1,58 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100' rel='stylesheet' type='text/css'/>
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,100' rel='stylesheet' type='text/css'/>
 	<link href='https://fonts.googleapis.com/css?family=Roboto+Mono' rel='stylesheet' type='text/css'>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<link href="style.css" rel="stylesheet"/>
+	<link href="ripple.css" rel="stylesheet"/>
 	<link href="scrollbar.css" rel="stylesheet"/>
 	<meta charset="utf-8">
 	<title>~</title>
 </head>
 <body>
-	<div id="center-container">
-    <div id="main">
-		<img src="art/sakuraburst.jpg" id="albumart"/>
-		<div id="songinfo">&nbsp;<br />&nbsp;</div>
-		<div id="trackbar-container"><div id="trackbar"></div></div>
-		<button onclick="prev()" class="skip" id="prev"></button>
-		<button onclick="pause()" class="play" id="play"></button>
-		<button onclick="next()" class="skip" id="next"></button>
+	<div id="main">
+		 <div id="art-container">
+		 	<img id="current-art" src="art/sakuraburst.jpg">
+		 	<img id="new-art" src="">
+		 </div>
+		 <div id="tracklist">
 
-		<div id="tracklist">
+		 </div>
+	</div>
 
+	<div id="info-controls">
+		<div id="trackbar-container">
+			<div id="trackbar"></div>
 		</div>
-    </div>
+
+		<div id="songinfo=wrapper">
+			<div id="songinfo">
+				
+			</div>
+		</div>
+
+		<div id= "controls">
+			<div id="buttons-wrapper">
+				<button onclick="prev()" class="skip" ripple="ripple" id="prev">
+						<i class="material-icons" id="prevIcon">skip_previous</i>
+				</button>
+				<button onclick="pause()" class="play" ripple="ripple" id="play">
+					<i class="material-icons" id="playIcon">play_arrow</i>
+				</button>
+				<button onclick="next()" class="skip" ripple="ripple" id="next">
+					<i class="material-icons" id="nextIcon">skip_next</i>
+				</button>
+			</div>
+		</div>
+
+		<div id="benis">
+		</div>
 	</div>
 <script src="script.js"></script>
+<script src="ripple.js"></script>
+<img id="bg-image">
 </body>
 </html>

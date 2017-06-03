@@ -1,3 +1,9 @@
+:root {
+	--highlight-color: lightgray;
+	--body-color: #ccc;
+	--bg-color: rgb(15, 15, 15);
+}
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -19,154 +25,169 @@ time, mark, audio, video {
 	vertical-align: baseline;
 }
 
-html, body {
+body {
     background-color: rgb(15, 15, 15);
     font-family: "Roboto Mono", monospace;
-    height: 100%;
+    color: var(--body-color);
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
 }
 
 button {
-    outline: none;
-    border: 1px solid lightgray;
-    background: none;
-    color: lightgray;
-    border-radius: 100%;
-    cursor: pointer;
-    text-align: center;
-    vertical-align: middle;
-    transition: .1s ease;
+	background: none;
+	outline: none;
+	box-shadow: none;
+	border: none;
+	color: var(--highlight-color);
+	cursor: pointer;
+	vertical-align: middle;
+	padding: 0pt;
 }
 
-button:hover {
-    border-color: white;
-    color: white;
-    border-style: double;
-    border-width: 4px;
-
-}
-button:active {
-    border-width: 6px;
-    border-style: double;
-}
-.play {
-    width: 5em;
-    height: 5em;
-    font-size: 14pt;
+button i {
+	transition: .2s;
 }
 
-.skip {
-    width: 4em;
-    height: 4em;
-    font-size: 14pt;
-    transition: border .1s, transform .3s;
+#nextIcon, #prevIcon {
+	font-size: 36pt;
 }
 
-#next:active {
-    transform: rotate(360deg);
+#playIcon {
+	font-size: 48pt;
 }
 
-#prev:active {
-    transform: rotate(-360deg);
+#art-container {
+	width: 600px;
+	height: 600px;
+	overflow: hidden;
 }
 
-#next:hover {
-    border-style: double solid double double;
+#art-container img {
+	position: absolute;
+	width: 600px;
+	height: auto;
 }
 
-#prev:hover {
-    border-style: double double double solid;
+#info-controls {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	background-color: var(--bg-color);
+	padding-top: 15px;
+	height: 5rem;
+}
+#info-controls div {
+	flex: 1;
+	align-self: center;
 }
 
-.play:hover {
-    border-style: double solid;
-    transform: rotate(180deg);
+#buttons-wrapper {
+	text-align: center;
+	margin-right: 1rem;
 }
 
-#center-container {
-    height: 90%;
+@media(max-width: 800px) {
+	#benis {
+		display: none;
+	}
 }
 
-#main {
-    width: 30em;
-    text-align: center;
-    border: 1px double white;
-    padding: 1em;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-#tracklist {
-    margin-top: .5em;
-    color: lightgray;
-    transition: .1s ease;
-    -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-   -khtml-user-select: none; /* Konqueror HTML */
-     -moz-user-select: none; /* Firefox */
-      -ms-user-select: none; /* Internet Explorer/Edge */
-          user-select: none; /* Non-prefixed version, currently
-                                supported by Chrome and Opera */
-    max-height: 20vh;
-    overflow-y: scroll;
-}
-
-p {
-    -webkit-margin-before: 0px;
-    -webkit-margin-after: 0px;
-    margin-bottom: .5em;
-    transition: .1s ease;
-    display: inline-block;
-    cursor: pointer;
-}
-
-p:hover {
-    color: white;
-}
-
-#albumart {
-    width: 100%;
-    margin-bottom: .4em;
+#trackbar-container {
+	width: 100%;
+	cursor: pointer;
+	position: absolute;
+	height: 15px;
+	top: 0;
 }
 
 #trackbar {
 	background-color: white;
-	height: 2px;
+	height: 4px;
 	width: 0px;
-}
-
-#trackbar-container {
-	padding-top: 20px;
-	padding-bottom: 20px;
-	width: 100%;
-    cursor: pointer;
+	vertical-align: center;
 }
 
 #songinfo {
-    color: lightgray;
-    height: 3em;
-    overflow: hidden;
+	margin-left: 1rem;
+}
+#songinfo-wrapper {
+	min-width: 30rem;
 }
 
-a {
-    text-decoration: none;
-    color: inherit;
-    border-bottom: 1px solid lightgray
+#main {
+	width: 600px;
+	margin: auto;
+	margin-top: 1rem;
+	margin-bottom: 7rem;
 }
 
-
-.paused {
-    border-style: double solid !important;
-    border-width: 4px;
-    transform: rotate(180deg) !important;
+#tracklist p {
+	cursor: pointer;
+	margin-top: .5rem;
+	display: inline-block;
 }
 
-.spinning {
-    -webkit-animation: rotation 10s infinite linear;
+#tracklist p:hover {
+	color: white;
 }
 
-@-webkit-keyframes rotation {
-    from {-webkit-transform: rotate(0deg);}
-    to   {-webkit-transform: rotate(359deg);}
+.song-name {
+	font-weight: bold;
+	font-size: 16pt;
+}
+
+#bg-image {
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	top: 0;
+	z-index: -10;
+	opacity: .2;
+	filter: blur(100px);
+}
+
+@keyframes fadeLeft {
+	to {
+		transform: translateX(-30px);
+		opacity: 0;
+	}
+}
+
+@keyframes fadeRight {
+	from {
+		transform: translateX(30px);
+		opacity: 0;
+		display: initial;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+#current-art.fadeLeft {
+	animation: fadeLeft .5s 1 forwards;
+}
+#current-art.fadeRight {
+	animation: fadeRight .5s 1 forwards reverse;
+}
+
+#new-art.fadeRight {
+	animation: fadeRight .5s 1 forwards;
+}
+#new-art.fadeLeft {
+	animation: fadeLeft .5s 1 forwards reverse;
+}
+
+#new-art {
+	z-index: -1;
+}
+
+#current-art {
+	z-index: 1;
 }

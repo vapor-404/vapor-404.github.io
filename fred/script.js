@@ -4,28 +4,44 @@ var firstClick = true;
 var track = 0;
 
 
-function play(song) {
+function play(song, update) {
     currentSong.pause();
     currentSong.currentTime = 0;
     currentSong = new Audio(song.audioPath);
     currentSong.play();
+    if (firstClick) {
+        firstClick = false;
+    }
+    $("#playIcon").text("pause")
     firstClick = false;
     playing = true;
-    setAlbumArt(song.artPath);
     track = songs.indexOf(song)
 
+    addSongInfo(song)
+
+    currentSong.onended = function() {
+        next();
+    }
+
+    if (!update) {
+        setAlbumArt(song.artPath);
+    }
+}
+
+function addSongInfo(song) {
     $("#songinfo").html(
-        song.name +
-        "<br> <a target='_blank' href='" + song.link + "'>" +
+        "<span class='song-name'>" + song.name +
+        "</span><br> <a target='_blank' href='" + song.link + "'>" +
         song.artist + "</a>"
     )
 
     document.title = song.name +  " - " + song.artist
 
-    currentSong.onended = function() {
-        next();
-    }
-    $("#play").addClass("spinning")
+        setBgArt(song.artPath);
+}
+
+function setBgArt(imgPath) {
+    $("#bg-image").attr("src", imgPath);
 }
 
 $('body').keyup(function(e){
@@ -59,15 +75,15 @@ function pause() {
     if (firstClick === true) {
         play(songs[0]);
         firstClick = false;
+        $("#playIcon").text("pause")
     } else if (playing) {
         currentSong.pause();
         playing = false;
-        $("#play").addClass("paused")
-        $("#play").removeClass("spinning")
+        $("#playIcon").text("play_arrow")
     } else {
         currentSong.play();
         playing = true;
-        $("#play").addClass("spinning")
+        $("#playIcon").text("pause")
     }
 }
 
@@ -78,8 +94,19 @@ function next() {
     if (track != songs.length-1) {
         toPlay = songs[track + 1];
     } else { toPlay = songs[0]; }
-    play(toPlay);
+    play(toPlay, true);
     if (!wasPlaying) pause();
+    
+    $("#new-art").attr("src", toPlay.artPath);
+    $("#current-art").addClass("fadeLeft");
+    $("#new-art").addClass("fadeRight");
+    setTimeout(function() {
+        $("#current-art").removeClass("fadeLeft");
+        $("#new-art").removeClass("fadeRight");
+        $("#current-art").attr("src", toPlay.artPath);
+    }, 500)
+
+    //switchArt(toPlay);
 }
 
 function prev() {
@@ -91,8 +118,18 @@ function prev() {
     } else if (track === 0) {
             toPlay = (songs[songs.length-1]);
     } else { toPlay = (songs[track - 1]); }
-    play(toPlay);
+    play(toPlay, true);
     if (!wasPlaying) pause();
+
+
+    $("#new-art").attr("src", toPlay.artPath);
+    $("#current-art").addClass("fadeRight");
+    $("#new-art").addClass("fadeLeft");
+    setTimeout(function() {
+        $("#current-art").removeClass("fadeRight");
+        $("#new-art").removeClass("fadeLeft");
+        $("#current-art").attr("src", toPlay.artPath);
+    }, 500)
 }
 
 function updateTrackbar() {
@@ -101,26 +138,28 @@ function updateTrackbar() {
 	$("#trackbar").css("width", percent)
 }
 
-setInterval(updateTrackbar, 20)
-
 $(document).ready(function() {
-    currentSong = new Audio(songs[1].audioPath)
+    setInterval(updateTrackbar, 20)
+
+    currentSong = new Audio(songs[0].audioPath);
+
+    addSongInfo(songs[0]);
+    setAlbumArt(songs[0].artPath);
+
     for (var i=0; i<songs.length; i++) {
         $("#tracklist").append(
             //a hack to get html entities from weird characters
             "<p onclick=play(songs["+ i +"])>" + $("<div/>").text(songs[i].name).html() + "</p><br>"
         )
     }
-    $("#tracklist").append(
-        "<p><a href='songs.zip' target='_blank'> download all</a></p>"
-    )
-    play(songs[0]);
-    pause();
+    
+    //$("#tracklist").append("<p><a href='songs.zip' target='_blank'> download all</a></p>")
+    
     document.getElementById("trackbar-container").addEventListener("click", seek);
 })
 
 function setAlbumArt(path) {
-    $("#albumart").attr("src", path);
+    $("#current-art").attr("src", path);
 }
 
 var cherryblossoms = {
@@ -313,3 +352,10 @@ var songs = [
     fujitascale,
     bonfires,
 ]
+
+function switchArt(newSong, direction) {
+    var artBlob = "<img src='"+newSong.artPath+"' id='newArt'>";
+    $("art-container").append(artBlob);
+}
+
+//overlay with absolute position, fade out with css and then update the original

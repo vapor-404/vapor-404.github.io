@@ -3,6 +3,7 @@ var playing;
 var firstClick = true;
 var track = 0;
 var imageToggled;
+var timerUpdater;
 
 function play(song, update) {
     currentSong.pause();
@@ -12,6 +13,12 @@ function play(song, update) {
     if (firstClick) {
         firstClick = false;
     }
+
+    clearInterval(timerUpdater);
+    timerUpdater = setInterval(function() {
+        updateTime(currentSong)
+    }, 50);
+
     $("#playIcon").text("pause")
     firstClick = false;
     playing = true;
@@ -116,7 +123,6 @@ function next() {
         $("#current-art").attr("src", toPlay.artPath);
     }, 500)
 
-    //switchArt(toPlay);
 }
 
 function prev() {
@@ -148,6 +154,12 @@ function updateTrackbar() {
 	$("#trackbar").css("width", percent)
 }
 
+function updateTime(song) {
+    $("#time").text(
+        formatTime(song.currentTime) + "/" + formatTime(song.duration)
+    );
+}
+
 $(document).ready(function() {
     setInterval(updateTrackbar, 20)
 
@@ -171,6 +183,15 @@ $(document).ready(function() {
 function setAlbumArt(path) {
     $("#current-art").attr("src", path);
 }
+
+ function formatTime(seconds) {
+    minutes = Math.floor(seconds / 60);
+    minutes = (minutes >= 10) ? minutes : "0" + minutes;
+    seconds = Math.floor(seconds % 60);
+    seconds = (seconds >= 10) ? seconds : "0" + seconds;
+    return minutes + ":" + seconds;
+  }
+
 
 var cherryblossoms = {
     audioPath : "mp3s/｢cherry blossoms explode across the dying horizon｣.mp3",

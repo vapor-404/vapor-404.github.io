@@ -196,3 +196,9 @@ button i {
 #current-art {
 	z-index: 1;
 }
+
+#time {
+	position: absolute;
+	right: 3rem;
+	top: 2rem;
+}

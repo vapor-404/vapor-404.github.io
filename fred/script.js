@@ -188,6 +188,7 @@ $(document).ready(function() {
 
     addSongInfo(songs[0]);
     setAlbumArt(songs[0].artPath);
+    $("#current-art").attr("src", songs[0].artPath);
 
     for (var i=0; i<songs.length; i++) {
         $("#tracklist").append(

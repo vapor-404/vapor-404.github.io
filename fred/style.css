@@ -26,7 +26,7 @@ time, mark, audio, video {
 }
 
 body {
-    background-color: rgb(15, 15, 15);
+    background-color: var(--bg-color);
     font-family: "Roboto Mono", monospace;
     color: var(--body-color);
 }
@@ -138,10 +138,10 @@ button i {
 
 .song-name {
 	font-weight: bold;
-	font-size: 16pt;
+	font-size: 20pt;
 }
 
-#bg-image {
+#bg-image, #new-bg {
 	position: fixed;
 	width: 100vw;
 	height: 100vh;
@@ -149,6 +149,11 @@ button i {
 	z-index: -10;
 	opacity: .2;
 	filter: blur(100px);
+	transition: .5s;
+}
+
+#new-bg {
+	opacity: 0;
 }
 
 @keyframes fadeLeft {

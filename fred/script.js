@@ -2,7 +2,7 @@ var currentSong;
 var playing;
 var firstClick = true;
 var track = 0;
-
+var imageToggled;
 
 function play(song, update) {
     currentSong.pause();
@@ -41,7 +41,17 @@ function addSongInfo(song) {
 }
 
 function setBgArt(imgPath) {
-    $("#bg-image").attr("src", imgPath);
+    //$("#bg-image").attr("src", imgPath);
+    if (!imageToggled) {
+        $("#new-bg").attr("src", imgPath);
+        $("#new-bg").css("opacity", .2);
+        $("#bg-image").css("opacity", 0);
+    } else {
+        $("#bg-image").attr("src", imgPath);
+        $("#bg-image").css("opacity", .2);
+        $("#new-bg").css("opacity", 0);        
+    }
+    imageToggled = !imageToggled;
 }
 
 $('body').keyup(function(e){

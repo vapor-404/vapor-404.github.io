@@ -16,155 +16,79 @@ time, mark, audio, video {
 	padding: 0;
 	border: 0;
 	font-size: 100%;
-	font-family: inherit;;
+	font-family: inherit;
 	vertical-align: baseline;
 }
 
-
 body {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	font-size: 10pt;
-	background-color: #151515;
-	background-image: url("bg.jpg");
-}
-
-a.special {
-	color: #dddddd;
-	text-decoration: none;
-	border-bottom: 1px solid #d0d0d0;
-}
-
-a {
-	color: inherit;
-	text-decoration: none;
-	border-bottom: 1px solid #adadad;
-}
-
-pre, #prompt {
-    color: #adadad;
-	font-family: "Roboto Mono", monospace;
-}
-
-::selection {
-	color: #151515;
-    background: pink;
-}
-
-pre {
-    margin: 0;
-    outline: none;
-}
-
-.output {
-    color: #828282;
-}
-
-#terminal {
-	display: block;
-	overflow-y: auto;
-	overflow-x: auto;
-	top: -2ex;
-	background-color: rgba(0, 0, 0, 0);
-	color: #adadad;
-	width: 100%;
-	min-height: 100%;
-	max-height: 100%;
-	animation: side .3s;
-}
-
-.prompt {
-    font-family: "Roboto Mono", monospace;
-    display: inline;
-	white-space: nowrap;
-}
-
-#input, .input-old {
-	display: inline;
+	background-color: var(--bg1);
+	font-size: 12pt;
 }
 
 #terminal-container {
-	padding: 12pt;
-	width: 80%;
-	margin-left: auto;
-	margin-right: auto;
-	height: 80%;
-	max-height: 80%;
-	background-color: #151515;
-	opacity: 1 ;
-	border-radius: 1px;
-	/*center it vertically*/
-	position: relative;
-	top: 50%;
-	transform: translateY(-50%);
-	box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.2);
-	animation: benis .5s;
+	width: 80vw;
+	height: 80vh;
+	overflow-y: scroll;
+	margin: auto;
+	margin-top: 10vh;
+	font-family: "Roboto Mono";
+	background-color: var(--bg2);
+	box-shadow: 10px 10px 0px 0px var(--shadow);
+	animation: rise .7s;
 }
 
-/* uncomment for a gradient bar at the top */
-/*
-#terminal-container::before {
-	content: '';
-	position: absolute;
-	width: 100%;
-	height: 10px;
-background-image: linear-gradient(to right, #43e97b 0%, #38f9d7 100%);
-	top: -10px;
-	left: 0;
-}
-*/
-
-#clock, #date {
-	float: right;
-	font-family: "Roboto Mono", monospace;
-	color: gray;
-	margin-left: 1em;
-	display: none;
+#terminal {
+	padding: 20pt;
 }
 
-#input>span {
-	max-width: 100%;
+#input {
+	display: inline-block;
 }
 
-@keyframes benis {
-	from {
-		margin-top: 2rem;
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
-	}
+#input:focus {
+	outline: none;
 }
 
-@keyframes side {
-	from {
-		transform: translateX(-2rem);
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
-	}
+.prompt, #input, .input-old {
+	white-space: pre;
+	color: var(--body1);
 }
 
-/* ==== editor css ======= */
+.output {
+	white-space: pre;
+	color: var(--body2);
+}
+
+/* ========= editing ========== */
 #editArea {
-	background-color: rgba(1, 1, 1, .2);
-	color: #adadad;
 	outline: none;
 	resize: none;
 	border: none;
 	font-size: inherit;
 	font-family: "Roboto Mono";
+	color: var(--body1);
+	background-color: var(--editbg);
 }
 
-#filename {
-	float: left;
-	font-family: "Roboto Mono";
-	color: gray;
+/* ======= will be changed on the fly ========= */
+:root {
+	--body1: lightgray;
+	--body2: gray;
+	--bg1: #2b2b2d;
+	--bg2: #1b1b1d;
+	--editbg: #0b0b0d;
+	--shadow: #0b0b0d;
+	--highlight: pink;
 }
 
-#timer {
-	font-family: "Roboto Mono", monospace;
-	color: dodgerblue;
+::selection {
+	background: var(--highlight);
+	color: var(--bg2);
+}
+
+@keyframes rise {
+	from {
+		transform: scale(.99);
+		box-shadow: 0px 0px 0px 0px var(--shadow);
+	}
 }

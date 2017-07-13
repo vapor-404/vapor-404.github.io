@@ -1,8 +1,8 @@
-var editElement = '<div id="editWrapper"><textarea id="editArea" rows="40" cols="120" spellcheck="false"></textarea></div>'
+var editElement = '<div id="editWrapper"><textarea id="editArea" rows="20" cols="80" spellcheck="false"></textarea></div>'
 var editing = false;
 var currentFileName = ""
 var files = {}
-var fileFunctions = [
+var editFunctions = [
     'edit',
     'close',
     'save',
@@ -25,107 +25,108 @@ $(document).keyup(function(e) {
     }
 });
 
-function edit(fileName) {
-    //make sure there's no window open already
-    if (editing){
-        print("Can't open two files at once, friend.")
-        return
-    }
-    //make sure there's a filename
-    if (fileName === "") {
-        print("Usage: edit [filename]")
-        return
-    }
-
-    //open the editor window
-    $("#terminal").append(editElement);
-	$("#filename").html(fileName)
-    currentFileName = fileName;
-    //open it if it exists
-    if (files[fileName]) {
-        document.getElementById("editArea").value = files[fileName]
-    }
-    document.getElementById("editArea").focus();
-    editing = true;
-    files[currentFileName] = editArea.value;
-    localStorage.setItem("textFiles", JSON.stringify(files))
-
-    //update the tab title
-    document.title += "/" + fileName
-    setCloseConfirm(true);
-}
-
-function save() {
-    if(!editing) {
-        print("No file open to save.")
-        return
-    }
-    files[currentFileName] = editArea.value;
-    localStorage.setItem("textFiles", JSON.stringify(files))
-    print(currentFileName + " saved.")
-}
-
-function close() {
-    var editArea = document.getElementById("editArea");
-    if (!editing) {
-        print("No file open.")
-        return
-    }
-    editing = false;
-    //save the file
-    console.log(editArea.value)
-    files[currentFileName] = editArea.value;
-    localStorage.setItem("textFiles", JSON.stringify(files))
-    $("#editWrapper").remove();
-	$("#filename").html("");
-	document.title = lastTitle
-    setCloseConfirm(false)
-}
-
-function rm(fileName) {
-    if (fileName === "") {
-        print("Usage: rm [filename]")
-        return
-    }
-
-    if (files.hasOwnProperty(fileName)) {
-        delete files[fileName]
-        print(fileName + " deleted.")
-        if (editing) {
-            $("#editWrapper").remove()
-			$("#filename").html("");
-			$("#input").unbind("keydown.vim");
-            editing = false;
-            document.title = lastTitle
+var edit = {
+    main: function(args) {
+        //make sure there's no window open already
+        if (editing){
+            render("Can't open two files at once, friend.")
+            return
         }
-    } else {
-        print(fileName + " doesn't exist.")
-    }
-    localStorage.setItem("textFiles", JSON.stringify(files))
-    setCloseConfirm(false)
+        //make sure there's a filename
+        if (args[0] == "" || args.length == 0) {
+            render("Usage: edit [filename]")
+            return
+        }
+
+        var fileName = args[0];
+
+        //open the editor window
+        $("#terminal").append(editElement);
+        currentFileName = fileName;
+        //open it if it exists
+        if (files[fileName]) {
+            document.getElementById("editArea").value = files[fileName]
+        }
+        document.getElementById("editArea").focus();
+        editing = true;
+        files[currentFileName] = editArea.value;
+        localStorage.setItem("textFiles", JSON.stringify(files))
+
+        //update the tab title
+        document.title += "/" + fileName
+        setCloseConfirm(true);
+    },
+    helpText: 'Creates or opens a local file for editing.'
 }
 
-function cat(fileName) {
-    if (fileName === "") {
-        print("Usage: cat [filename]")
-        return
-    }
-
-    if (files.hasOwnProperty(fileName)) {
-        print(formatURLs(files[fileName]))
-        return
-    }
-
-    if (window.hasOwnProperty(fileName)) {
-        print(window[fileName])
-        return
-    }
-    print("No file or function named '" + fileName + "'.")
+var save = {
+    main: function() {
+        if(!editing) {
+            render("No file open to save.")
+            return
+        }
+        files[currentFileName] = editArea.value;
+        localStorage.setItem("textFiles", JSON.stringify(files))
+        render(currentFileName + " saved.")
+    },
+    helpText: 'Saves an open file.'
 }
 
-function formatURLs(text) {
-    var urlRegex = /(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\?\=\/\w \.-]*)*\/?/
-    return text.replace(urlRegex, function(url) {
-        return '<a href="' + url + '">' + url + '</a>';
-    })
+var close = {
+    main: function() {
+        var editArea = document.getElementById("editArea");
+        if (!editing) {
+            render("No file open.")
+            return
+        }
+        editing = false;
+        files[currentFileName] = editArea.value;
+        localStorage.setItem("textFiles", JSON.stringify(files))
+        $("#editWrapper").remove();
+    	document.title = lastTitle
+        setCloseConfirm(false)
+    },
+    helpText: 'Saves and closes an open file.'
 }
+
+var rm = {
+    main: function(fileName) {
+        if (fileName === "") {
+            render("Usage: rm [filename]")
+            return
+        }
+
+        if (files.hasOwnProperty(fileName)) {
+            delete files[fileName]
+            render(fileName + " deleted.")
+            if (editing) {
+                $("#editWrapper").remove()
+    			$("#input").unbind("keydown.vim");
+                editing = false;
+                document.title = lastTitle
+            }
+        } else {
+            render(fileName + " doesn't exist.")
+        }
+        localStorage.setItem("textFiles", JSON.stringify(files))
+        setCloseConfirm(false)
+    },
+    helpText: 'Deletes and/or closes a file. Irreversible.'
+}
+
+var cat = {
+    main: function(fileName) {
+        if (fileName === "") {
+            render("Usage: cat [filename]")
+            return
+        }
+
+        if (files.hasOwnProperty(fileName)) {
+            render(files[fileName])
+            return
+        }
+
+        render("No file named '" + fileName + "'.")
+    },
+    helpText: 'Renders the contents of a file to the terminal.'
+}  

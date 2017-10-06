@@ -56,8 +56,10 @@ function loadCSS() {
 }
 
 function loadLocation() {
-    terminal.lat = JSON.parse(localStorage.getItem("terminal")).lat
-    terminal.lon = JSON.parse(localStorage.getItem("terminal")).lon
+	if (localStorage.getItem("terminal")) {
+		terminal.lat = JSON.parse(localStorage.getItem("terminal")).lat
+		terminal.lon = JSON.parse(localStorage.getItem("terminal")).lon
+	}
 }
 
 function loadConfig() {

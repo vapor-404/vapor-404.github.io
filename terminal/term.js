@@ -9,7 +9,6 @@ var editing = false;
 var terminal = {
 	userName: "guest",
 	userMachine: "start",
-    greeting: "",
 	body1: "lightgray",
 	body2: "gray",
 	bg1: "#2b2b2d",
@@ -48,7 +47,22 @@ function init() {
 
 	addListeners();
 
+    //user-defined startup
+    evalStartup();
+
     $("#input").focus();
+}
+
+function evalStartup() {
+    if (files[".startup"]) {
+        try {
+            eval(files[".startup"]);
+        }
+        catch (e) {
+            render("Error in .startup!", "indianred")
+            render(e, "indianred");
+        }
+    }
 }
 
 function loadCSS() {
@@ -56,10 +70,10 @@ function loadCSS() {
 }
 
 function loadLocation() {
-	if (localStorage.getItem("terminal")) {
-		terminal.lat = JSON.parse(localStorage.getItem("terminal")).lat
-		terminal.lon = JSON.parse(localStorage.getItem("terminal")).lon
-	}
+    if (localStorage.getItem("terminal")) {
+        terminal.lat = JSON.parse(localStorage.getItem("terminal")).lat 
+        terminal.lon = JSON.parse(localStorage.getItem("terminal")).lon 
+    }
 }
 
 function loadConfig() {
@@ -104,9 +118,9 @@ function addListeners() {
 	input = document.getElementById("input");
     input.addEventListener("keydown", function(a){
         var key = a.keyCode;
-        if(key == 13){ //enter
+        if(key == 13){ //enterf
             a.preventDefault();
-            handleInput();
+            handleInput($("#input").html());
             inputIndex = 0;
         } else if (key === 38) { //up arrow
             document.getElementById("input").innerHTML = lastInputs[inputIndex];
@@ -141,8 +155,7 @@ function getMachine() {
 }
 
 //the main terminal pipeline
-function handleInput() {
-	var rawInput = $("#input").html();
+function handleInput(rawInput) {
 	$("#input").html("");
 
 	appendLastInput(rawInput);
@@ -307,7 +320,9 @@ function addInput(str) {
         return;
     }
 
-    lastInputs.unshift(str);
+    if (lastInputs[0] == str) {
+        lastInputs.unshift(str);
+    }
 
     localStorage.setItem("history", JSON.stringify(lastInputs))
 }

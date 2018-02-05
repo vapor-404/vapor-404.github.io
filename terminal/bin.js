@@ -1,9 +1,4 @@
 function binStartup() {
-	render(getTime());
-	if (terminal.greeting != "") {
-		render(terminal.greeting);
-	}
-	weather.main()
 }
 
 var terminalFunctions = [
@@ -117,6 +112,7 @@ var about = {
 			"Run 'terminal' in the dev console to see the possible override properties.\n"+
 			"You can also create a .bookmarks file (linkTitle http://link.com/).\n"+
 			"Put something in a file called .art to add your custom ASCII art to screenfetch.\n"+
+			"Finally, you can put arbitrary startup code to execute in your .startup file. Errors are handled automatically."+
 			"\nTo see the full functionality, type 'ls'."
 		)
 	},
@@ -160,7 +156,8 @@ var screenfetch = {
 	        'Plugins: '+navigator.plugins.length;
 
 		render(hcat(artBlob, screenfetchBody));
-	}
+	},
+	helpText: "Displays system info, along with some ASCII art you can specify in '.art'."
 }
 
 var time = {
@@ -187,8 +184,9 @@ var chan = {
 var dice = {
 	main: function() {
 		render("Usage: [count]d[sides][+modifier]")
-		render("count and modifier are optional.")
-	}
+		render("Count and modifier are optional.")
+	},
+	helpText: "Usage: [count]d[sides][+modifier]\nCount and modifier are optional."
 }
 
 var weather = {
@@ -227,7 +225,8 @@ var weather = {
 			o.timestamp = new Date();
 			localStorage.setItem("cachedWeatherData", JSON.stringify(o))
 		})
-	}
+	},
+	helpText: "Displays weather info for the automatically detected location.\nRun 'locate' if you don't have that stored already."
 }
 
 function displayWeather(o) {

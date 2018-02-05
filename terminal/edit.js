@@ -67,7 +67,7 @@ var save = {
         }
         files[currentFileName] = editArea.value;
         localStorage.setItem("textFiles", JSON.stringify(files))
-        render(currentFileName + " saved.")
+        render(currentFileName + " saved at "+getTime()+".")
     },
     helpText: 'Saves an open file.'
 }

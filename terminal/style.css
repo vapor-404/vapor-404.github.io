@@ -35,6 +35,7 @@ body {
 	background-color: var(--bg2);
 	box-shadow: 10px 10px 0px 0px var(--shadow);
 	animation: rise .7s;
+	overflow: hidden;
 }
 
 #terminal {
